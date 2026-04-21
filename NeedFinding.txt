@@ -1,0 +1,5 @@
+One of our group members had a family friend who just opened a bookstore. This woman talked about how she hoped we could build a
+reccomendation algorithm that her customers could use to find more enticing books. We as a group called her and asked about other features/
+concerns she had in mind. She mentioned concerns about speed, not wanting the algorithm to take too long and sift through poorly sorted 
+data. This means we are going to have to intelligently find ways to group, store, and search for metadata. Additionally, she wanted a simple
+search feature instead of reccomendation only. 
