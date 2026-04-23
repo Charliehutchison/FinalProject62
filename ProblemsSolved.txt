@@ -1,0 +1,5 @@
+Local bookstore owners often still work with old sorting systems like the dewey decimal system. We believe that is outdated and both 
+owners and consumers would benefit from an improved system. We plan on implementing a reccomendation feature that can take language based
+user input return books based on author, genre, rating, and previously liked books. A user rating system that allows users to score books 
+after reading them to influence future reccomendations, and a search/filter/sort feature that lets users quickly find books based on title,
+author, genre, or rating.
