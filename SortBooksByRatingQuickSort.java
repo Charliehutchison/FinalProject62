@@ -43,40 +43,47 @@ public class SortBooksByRatingQuickSort {
     }
 
     static void quickSortByRating(List<String[]> rows, int left, int right) {
-        if (left < right) {
-            int pivotIndex = partition(rows, left, right);
-    
-            quickSortByRating(rows, left, pivotIndex);
-            quickSortByRating(rows, pivotIndex + 1, right);
+        if (left >= right) {
+            return;
+        }
+
+        int splitIndex = partition(rows, left, right);
+
+        // These guards ensure we always shrink the range and avoid recursion loops.
+        if (left < splitIndex - 1) {
+            quickSortByRating(rows, left, splitIndex - 1);
+        }
+        if (splitIndex < right) {
+            quickSortByRating(rows, splitIndex, right);
         }
     }
     
     static int partition(List<String[]> rows, int left, int right) {
-        // Use the middle element as the pivot
-        double pivotRating = getRating(rows.get((left + right) / 2));
-    
-        int i = left - 1;
-        int j = right + 1;
-    
-        while (true) {
-            // Move i right until we find a rating that should be on the right side
-            do {
+        // Use left element value as pivot (descending order).
+        double pivotRating = getRating(rows.get(left));
+
+        int i = left;
+        int j = right;
+
+        while (i <= j) {
+            // Move i right while row[i] should stay on the left.
+            while (getRating(rows.get(i)) > pivotRating) {
                 i++;
-            } while (getRating(rows.get(i)) > pivotRating);
-    
-            // Move j left until we find a rating that should be on the left side
-            do {
-                j--;
-            } while (getRating(rows.get(j)) < pivotRating);
-    
-            // If pointers cross, partition is done
-            if (i >= j) {
-                return j;
             }
-    
-            // Swap misplaced rows
-            Collections.swap(rows, i, j);
+
+            // Move j left while row[j] should stay on the right.
+            while (getRating(rows.get(j)) < pivotRating) {
+                j--;
+            }
+
+            if (i <= j) {
+                Collections.swap(rows, i, j);
+                i++;
+                j--;
+            }
         }
+
+        return i;
     }
 
     static double getRating(String[] row) {
