@@ -94,14 +94,16 @@ public class Lookup {
         Scanner scanner = new Scanner(System.in);
 
         while (true) { 
-            System.out.println("Enter book title: ");
+            System.out.println("Enter book title (or 'quit' to exit): ");
             String query = scanner.nextLine().trim();
     
+            if (query.equalsIgnoreCase("quit")) break;
+            
             BookInfo book = lookup.search(query);
     
             if (book != null){
                 System.out.println(book);
-                break;
+                
             } else {
                 List<String> suggestions = lookup.suggest(query);
                 if (suggestions.isEmpty()){
@@ -109,7 +111,6 @@ public class Lookup {
                     System.out.println("Enter book title: ");
                 } else if (suggestions.size() == 1){
                     System.out.println(lookup.search(suggestions.get(0)));
-                    break;
                 } else {
                     System.out.println("Did you mean:");
                     for (int i = 0; i < suggestions.size(); i++){
@@ -118,7 +119,6 @@ public class Lookup {
                     System.out.println("Enter number: ");
                     int choice = Integer.parseInt(scanner.nextLine().trim());
                     System.out.println(lookup.search(suggestions.get(choice - 1)));
-                    break;
                 }
             }
             
