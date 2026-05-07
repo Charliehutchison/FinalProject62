@@ -1,5 +1,3 @@
-
-
 public class BookInfo {
     private String bookId;
     private String title;
@@ -65,3 +63,4 @@ public class BookInfo {
         " Description: " + description + "\n" + 
         "\n More Info: " + url + "\n" + separator + "\n";
     }
+}
