@@ -6,6 +6,7 @@
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -71,6 +72,13 @@ public class Lookup {
      */
     public BookInfo search(String title){
         return letBookHashMap.get(title.toLowerCase());
+    }
+
+    /**
+     * All loaded books (copy of values). Used by {@link BookRecommender}.
+     */
+    public Collection<BookInfo> getAllBooks() {
+        return new ArrayList<>(letBookHashMap.values());
     }
 /**
  * Some fields have commas in them, but splitting on commas normally would break fields up that shouldn't be broken up.

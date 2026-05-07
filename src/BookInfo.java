@@ -50,7 +50,9 @@ public class BookInfo {
 
     public String getTitle(){return title;}
     public String getAverageRating(){return averageRating;}
+    public String getRatingsCount() { return ratingsCount; }
     public String getPrimaryAuthor() { return primaryAuthor; }
+    public String getAuthors() { return authors; }
     public String getNumPages()      { return numPages; }
     public String getGenres()        { return genres; }
 
