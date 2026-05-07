@@ -41,7 +41,15 @@ public class BookInfo {
         return title;
     }
 
-    @Override 
+    public String getAverageRating(){
+        return averageRating;
+    }
+
+    public String getPrimaryAuthor() { return primaryAuthor; }
+    public String getNumPages()      { return numPages; }
+    public String getGenres()        { return genres; }
+
+    @Override
     public String toString(){
         String separator = "=".repeat(60);
 
@@ -57,5 +65,3 @@ public class BookInfo {
         " Description: " + description + "\n" + 
         "\n More Info: " + url + "\n" + separator + "\n";
     }
-}
-
