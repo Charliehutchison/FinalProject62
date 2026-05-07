@@ -1,3 +1,7 @@
+/**
+ * Stores all the data for a book object
+ * @author Tara Kamshad
+ */
 public class BookInfo {
     private String bookId;
     private String title;
@@ -15,6 +19,10 @@ public class BookInfo {
     private String genres;
     private String description;
     private String url;
+
+    /**
+     * Constructor
+     */
 
     public BookInfo (String bookId, String title, String primaryAuthor, String authors, String publisher, String publicationDate,String language, String numPages, String isbn, String isbn13, String averageRating,String ratingsCount, String textReviewsCount, String genres, String description, String url){
         this.bookId = bookId;
@@ -35,18 +43,21 @@ public class BookInfo {
         this.url = url;
     }
 
-    public String getTitle(){
-        return title;
-    }
+    /**
+     * Methods that return variables
+     * @return String title, String averageRating, String primaryAuthor, String numPages, String genres
+     */
 
-    public String getAverageRating(){
-        return averageRating;
-    }
-
+    public String getTitle(){return title;}
+    public String getAverageRating(){return averageRating;}
     public String getPrimaryAuthor() { return primaryAuthor; }
     public String getNumPages()      { return numPages; }
     public String getGenres()        { return genres; }
 
+    /**
+     * Overriding toString method to cleanly print book information
+     * @return String with book information
+     */
     @Override
     public String toString(){
         String separator = "=".repeat(60);
