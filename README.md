@@ -5,9 +5,10 @@ This is our Final Projects for Data Structures and Algorithms, Pomona College's 
 Run Lookup.java and enter a book title to recieve information about the book.
 Keep entering books, or type 'quit' to exit.
 
-If you have not compiled, run the following CLI arguments:  
+If you have not compiled, run the following CLI arguments:    
+  
 javac src/BookInfo.java  
-javac src/Lookup.java  
+javac -cp src src/Lookup.java
 java -cp src Lookup  
 
 ### Feature 2:
