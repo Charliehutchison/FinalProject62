@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "BookRecommender",
+            "request": "launch",
+            "mainClass": "BookRecommender",
+            "projectName": "FinalProject62_8b0610c6"
+        },
+        {
+            "type": "java",
             "name": "BookRecommenderInterface",
             "request": "launch",
             "mainClass": "BookRecommenderInterface",

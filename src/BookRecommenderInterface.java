@@ -14,6 +14,9 @@ public interface BookRecommenderInterface {
     // Returns a list of recommended books based on genre
     List<String> getRecommendationsByGenre(String genre);
 
+
+    //The Filtering Methods and reccomendation methods were implemented in 
+    //different files by different group members. So the interface is slightly modified to include the filtering methods.
     // Searches for books by title keyword
     List<String> searchByTitle(String titleKeyword);
 
