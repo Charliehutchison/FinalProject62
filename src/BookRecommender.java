@@ -222,52 +222,64 @@ public class BookRecommender implements BookRecommenderInterface {
         System.out.println("Type quit when done.");
         System.out.println();
 
-        try (Scanner in = new Scanner(System.in)) {
-            while (true) {
-                System.out.print("> ");
-                String line = in.nextLine().trim();
-                if (line.equalsIgnoreCase("quit")) {
-                    break;
-                }
-                if (line.isEmpty()) {
+    try (Scanner in = new Scanner(System.in)) {
+        while (true) {
+            System.out.print("> ");
+            String line = in.nextLine().trim();
+            if (line.equalsIgnoreCase("quit")) {
+                break;
+            }
+            if (line.isEmpty()) {
+                continue;
+            }
+        
+            if (line.regionMatches(true, 0, "genre ", 0, 6)) {
+                String g = line.substring(6).trim();
+                if (g.isEmpty()) {
+                    System.out.println("Try: genre fantasy");
                     continue;
                 }
-
-                if (line.regionMatches(true, 0, "genre ", 0, 6)) {
-                    String g = line.substring(6).trim();
-                    if (g.isEmpty()) {
-                        System.out.println("Try: genre fantasy");
-                        continue;
-                    }
-                    List<String> byGenre = rec.getRecommendationsByGenre(g);
-                    if (byGenre.isEmpty()) {
-                        System.out.println("No books matched that genre substring.");
-                    } else {
-                        printNumbered(byGenre);
-                    }
-                    System.out.println();
-                    continue;
-                }
-
-                if (!rec.containsBook(line)) {
-                    System.out.println("That title isn’t in this dataset — copy it exactly from the CSV.");
-                    System.out.println();
-                    continue;
-                }
-
-                List<String> recs = rec.getRecommendations(line);
-                if (recs.isEmpty()) {
-                    System.out.println("Found the book, but no related titles (missing genres / no overlap).");
+                List<String> byGenre = rec.getRecommendationsByGenre(g);
+                if (byGenre.isEmpty()) {
+                    System.out.println("No books matched that genre substring.");
                 } else {
-                    printNumbered(recs);
+                    printNumbered(byGenre);
                 }
                 System.out.println();
+                continue;
             }
+        
+            if (!rec.containsBook(line)) {
+                List<String> suggestions = rec.lookup.suggest(line);
+                if (suggestions.isEmpty()) {
+                    System.out.println("Book not found. Please try again.");
+                    System.out.println();
+                    continue;
+                } else if (suggestions.size() == 1) {
+                    line = suggestions.get(0);
+                } else {
+                    System.out.println("Did you mean:");
+                    for (int i = 0; i < suggestions.size(); i++) {
+                        System.out.println(i + 1 + ". " + suggestions.get(i));
+                    }
+                    System.out.print("Enter number: ");
+                    int choice = Integer.parseInt(in.nextLine().trim());
+                    line = suggestions.get(choice - 1);
+                }
+            }
+        
+            List<String> recs = rec.getRecommendations(line);
+            if (recs.isEmpty()) {
+                System.out.println("Found the book, but no related titles (missing genres / no overlap).");
+            } else {
+                printNumbered(recs);
+            }
+            System.out.println();
         }
 
         System.out.println("Goodbye.");
     }
-
+    }
     private static void printNumbered(List<String> titles) {
         int i = 1;
         for (String t : titles) {

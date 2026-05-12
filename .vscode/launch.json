@@ -9,6 +9,13 @@
             "name": "BookRecommender",
             "request": "launch",
             "mainClass": "BookRecommender",
+            "projectName": "FinalProject62-1_705731a1"
+        },
+        {
+            "type": "java",
+            "name": "BookRecommender",
+            "request": "launch",
+            "mainClass": "BookRecommender",
             "projectName": "FinalProject62_8b0610c6"
         },
         {
