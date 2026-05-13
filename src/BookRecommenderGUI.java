@@ -160,12 +160,60 @@ public class BookRecommenderGUI extends JFrame {
 
     }
 
-        //-----------------------------
+    //-----------------------------
     // BY GENRE!
     //-----------------------------
+    //extract genres
+    private List<String> distinctGenres() {
+        ArrayList<String> squad = new ArrayList<>();
+        for (BookInfo bookie : peep.getAllBooks()) {
+            for (String crumb : bookie.getGenres().split(",")) {
+                String nugget = crumb.trim();
+                if (!squad.contains(nugget)) {
+                    squad.add(nugget);
+                }
+            }
+        }
+        Collections.sort(squad);
+        return squad;
+    }
+
     private JPanel makeGenre(){
         JPanel vibe = new JPanel(new BorderLayout(8, 8));
         vibe.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+
+        //DROPDOWN!!!
+        //needs a method to extract all existing genres
+        List<String> genres = distinctGenres();
+        JComboBox grower = new JComboBox<>(genres.toArray(new String[0]));
+        JButton yeet = new JButton("Search");
+        JPanel crown = new JPanel(new BorderLayout(6, 0));
+        crown.add(new JLabel("Search by Title:  "), BorderLayout.WEST);
+        crown.add(grower, BorderLayout.CENTER);
+        crown.add(yeet, BorderLayout.EAST);
+        vibe.add(crown, BorderLayout.NORTH);
+
+        //results
+        DefaultListModel<String> feed = new DefaultListModel<>();
+        JList<String> lineup = new JList<>(feed);
+        lineup.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane swipe = new JScrollPane(lineup);
+        swipe.setBorder(BorderFactory.createTitledBorder("Results"));
+
+        // details
+        JTextArea tea = new JTextArea();
+        tea.setEditable(false);
+        tea.setLineWrap(true);
+        tea.setWrapStyleWord(true);
+        JScrollPane tealeaf = new JScrollPane(tea);
+        tealeaf.setBorder(BorderFactory.createTitledBorder("Book Details"));
+
+        // divider
+        JSplitPane beef = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, swipe, tealeaf);
+        beef.setDividerLocation(300);
+        vibe.add(beef, BorderLayout.CENTER);
+
 
 
 
