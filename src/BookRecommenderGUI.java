@@ -214,7 +214,24 @@ public class BookRecommenderGUI extends JFrame {
         beef.setDividerLocation(300);
         vibe.add(beef, BorderLayout.CENTER);
 
+        yeet.addActionListener(e -> {
+            String OG = (String) grower.getSelectedItem();
+            feed.clear();
+            List<String> bets = plug.getRecommendationsByGenre(OG);
+            for (String handle : bets) {
+                feed.addElement(handle);
+            }
+            if (!feed.isEmpty()) {
+                lineup.setSelectedIndex(0);
+            }
+        });
 
+        lineup.addListSelectionListener(e -> {
+            String handle = lineup.getSelectedValue();
+            BookInfo bookie = peep.search(handle);
+            tea.setText(bookie.toString());
+            tea.setCaretPosition(0);
+        });
 
 
 
