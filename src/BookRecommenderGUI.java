@@ -31,9 +31,9 @@ public class BookRecommenderGUI extends JFrame {
         JTabbedPane decks = new JTabbedPane();
         decks.addTab("Search", makeSearch());
         decks.addTab("Top Rated", makeGoats());
-        // decks.addTab("Similar Books", makeTwins());
-        // decks.addTab("Browse by Genre", makeGenre());
-        // decks.addTab("Filter", makeFilter());
+        decks.addTab("Similar Books", makeTwins());
+        decks.addTab("Browse by Genre", makeGenre());
+        decks.addTab("Filter", makeFilter());
         add(decks);
 
         setVisible(true);
@@ -160,12 +160,53 @@ public class BookRecommenderGUI extends JFrame {
 
     }
 
-public static void main(String[] args){
-    try {
-        new BookRecommenderGUI();
-    } catch (IOException e) {
-        e.printStackTrace();
+        //-----------------------------
+    // BY GENRE!
+    //-----------------------------
+    private JPanel makeGenre(){
+        JPanel vibe = new JPanel(new BorderLayout(8, 8));
+        vibe.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+
+
+
+        return vibe;
     }
-}
+
+    //-----------------------------
+    // SIMILAR BOOKS
+    //-----------------------------
+    private JPanel makeTwins(){
+        JPanel vibe = new JPanel(new BorderLayout(8, 8));
+        vibe.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        
+
+
+        return vibe;
+    }
+
+    //-----------------------------
+    // FIlter
+    //-----------------------------
+    private JPanel makeFilter(){
+        JPanel vibe = new JPanel(new BorderLayout(8, 8));
+        vibe.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        
+
+
+        return vibe;
+    }
+
+    public static void main(String[] args){
+        try {
+            new BookRecommenderGUI();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 }
