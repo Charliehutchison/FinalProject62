@@ -125,11 +125,38 @@ public class BookRecommenderGUI extends JFrame {
     private JPanel makeGoats(){
         //this stays the same because it's the big window
         JPanel vibe = new JPanel(new BorderLayout(8, 8));
-        vibe.setBorder(new EmptyBorder(10, 10, 10, 10));
-
-        List<BookInfo> ranked = new ArrayList<>(peep.getAllBooks());
-        SortBooksByRatingQuickSort.quickSortBooks(ranked, 0, ranked.size() - 1);
+        vibe.setBorder(new EmptyBorder(10, 10, 10, 10));List<BookInfo> ranked = new ArrayList<>(peep.getAllBooks());
         
+        SortBooksByRatingQuickSort.quickSortBooks(ranked, 0, ranked.size() - 1);
+        // TOP 100
+        List<BookInfo> cream = ranked.subList(0, GOATS-1);
+
+        DefaultListModel<String> feed = new DefaultListModel<>();
+        for (BookInfo bookie : cream){
+            feed.addElement(bookie.getTitle());
+        }
+
+        JList<String> lineup = new JList<>(feed);
+        lineup.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane swipe = new JScrollPane(lineup);
+        swipe.setBorder(BorderFactory.createTitledBorder("Top" + GOATS + "books by rating"));
+        
+        JTextArea tea = new JTextArea();
+        tea.setEditable(false);
+        JScrollPane tealeaf = new JScrollPane(tea);
+        tealeaf.setBorder(BorderFactory.createTitledBorder("Book details"));
+        
+        JSplitPane beef = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, swipe, tealeaf);
+        beef.setDividerLocation(380);
+        vibe.add(beef, BorderLayout.CENTER);
+
+        lineup.addListSelectionListener(e -> {
+            String handle = lineup.getSelectedValue();
+            BookInfo bookie = peep.search(handle);
+            tea.setText(bookie.toString());
+            tea.setCaretPosition(0);
+        });
+        return vibe;
 
     }
 
