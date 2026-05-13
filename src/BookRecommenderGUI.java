@@ -1,172 +1,131 @@
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
+//so I used claude to show me an example of a gui and now i'm gonna try to recreate it WISH ME LUCK
+// this is art
+
 import java.awt.*;
-import java.io.*;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.stream.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
+/**
+ * window for the Book Recommender
+ */
 public class BookRecommenderGUI extends JFrame {
 
-    private static final String DATASET = "datasets/books_merged_clean.csv";
-    private static final int TOP_N = 100;
+    private static final String BIBLE = "datasets/books_merged_clean.csv";
+    private static final int GOATS = 100;
 
-    private final Lookup lookup;
+    private Lookup peep;
+    private BookRecommender plug;
 
     public BookRecommenderGUI() throws IOException {
-        lookup = new Lookup(DATASET);
+        peep = new Lookup(BIBLE);
+        //plug = new BookRecommender(BIBLE);
 
         setTitle("Book Recommender");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1050, 680);
-        setMinimumSize(new Dimension(700, 500));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1920, 1080);
         setLocationRelativeTo(null);
 
-        JTabbedPane tabs = new JTabbedPane();
-        tabs.addTab("Search", buildSearchPanel());
-        tabs.addTab("Top Rated", buildTopRatedPanel());
-        add(tabs);
+        JTabbedPane decks = new JTabbedPane();
+        decks.addTab("Search", makeSearch());
+        // decks.addTab("Top Rated", makeGoats());
+        // decks.addTab("Similar Books", makeTwins());
+        // decks.addTab("Browse by Genre", makeGenre());
+        // decks.addTab("Filter", makeFilter());
+        add(decks);
+
         setVisible(true);
     }
 
-    private JPanel buildSearchPanel() {
-        JPanel panel = new JPanel(new BorderLayout(8, 8));
-        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+    // ------------------------------------------------------------
+    // Search
+    // ------------------------------------------------------------
+    private JPanel makeSearch() {
+        JPanel vibe = new JPanel(new BorderLayout(8, 8));
+        vibe.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JTextField searchField = new JTextField();
-        JButton searchBtn = new JButton("Search");
-        JPanel topBar = new JPanel(new BorderLayout(6, 0));
-        topBar.add(new JLabel("Search by Title:  "), BorderLayout.WEST);
-        topBar.add(searchField, BorderLayout.CENTER);
-        topBar.add(searchBtn, BorderLayout.EAST);
-        panel.add(topBar, BorderLayout.NORTH);
+        //search bar
+        JTextField snooper = new JTextField();
+        JButton yeet = new JButton("Search");
+        JPanel crown = new JPanel(new BorderLayout(6, 0));
+        crown.add(new JLabel("Search by Title:  "), BorderLayout.WEST);
+        crown.add(snooper, BorderLayout.CENTER);
+        crown.add(yeet, BorderLayout.EAST);
+        vibe.add(crown, BorderLayout.NORTH);
 
-        DefaultListModel<String> listModel = new DefaultListModel<>();
-        JList<String> bookList = new JList<>(listModel);
-        bookList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        JScrollPane listScroll = new JScrollPane(bookList);
-        listScroll.setPreferredSize(new Dimension(300, 0));
-        listScroll.setBorder(BorderFactory.createTitledBorder("Results"));
+        //results
+        DefaultListModel<String> feed = new DefaultListModel<>();
+        JList<String> lineup = new JList<>(feed);
+        lineup.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane swipe = new JScrollPane(lineup);
+        swipe.setBorder(BorderFactory.createTitledBorder("Results"));
 
-        JTextArea detailArea = makeDetailArea();
-        JScrollPane detailScroll = new JScrollPane(detailArea);
-        detailScroll.setBorder(BorderFactory.createTitledBorder("Book Details"));
+        // details
+        JTextArea tea = new JTextArea();
+        tea.setEditable(false);
+        tea.setLineWrap(true);
+        tea.setWrapStyleWord(true);
+        JScrollPane tealeaf = new JScrollPane(tea);
+        tealeaf.setBorder(BorderFactory.createTitledBorder("Book Details"));
 
-        JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, listScroll, detailScroll);
-        split.setDividerLocation(300);
-        panel.add(split, BorderLayout.CENTER);
+        // divider
+        JSplitPane beef = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, swipe, tealeaf);
+        beef.setDividerLocation(300);
+        vibe.add(beef, BorderLayout.CENTER);
 
-        Runnable doSearch = () -> {
-            String q = searchField.getText().trim();
-            listModel.clear();
-            detailArea.setText("");
-            if (q.isEmpty()) return;
-
-            BookInfo exact = lookup.search(q);
-            if (exact != null) {
-                listModel.addElement(exact.getTitle());
+        // look up..
+        yeet.addActionListener(e -> {
+            String OG = snooper.getText().trim();
+            feed.clear();
+            if (OG.isEmpty()) {
+                return;
+            }
+            //find your OG
+            BookInfo hit = peep.search(OG);
+            if (hit != null) {
+                feed.addElement(hit.getTitle());
             } else {
-                List<String> suggestions = lookup.suggest(q);
-                Collections.sort(suggestions);
-                for (String s : suggestions) {
-                    BookInfo b = lookup.search(s);
-                    if (b != null) listModel.addElement(b.getTitle());
+                List<String> pings = peep.suggest(OG);
+                Collections.sort(pings);
+                for (String ping : pings) {
+                    BookInfo bookie = peep.search(ping);
+                    if (bookie != null) {
+                        feed.addElement(bookie.getTitle());
+                    }
                 }
             }
-            if (!listModel.isEmpty()) bookList.setSelectedIndex(0);
-        };
-
-        searchBtn.addActionListener(e -> doSearch.run());
-        searchField.addActionListener(e -> doSearch.run());
-        searchField.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { SwingUtilities.invokeLater(doSearch); }
-            public void removeUpdate(DocumentEvent e) { SwingUtilities.invokeLater(doSearch); }
-            public void changedUpdate(DocumentEvent e) { SwingUtilities.invokeLater(doSearch); }
-        });
-
-        bookList.addListSelectionListener(e -> {
-            if (e.getValueIsAdjusting()) return;
-            String title = bookList.getSelectedValue();
-            if (title == null) return;
-            BookInfo book = lookup.search(title);
-            if (book != null) {
-                detailArea.setText(book.toString());
-                detailArea.setCaretPosition(0);
+            if (!feed.isEmpty()) {
+                lineup.setSelectedIndex(0);
             }
         });
 
-        return panel;
-    }
+        // etner
+        snooper.addActionListener(e -> yeet.doClick());
 
-    private JPanel buildTopRatedPanel() {
-        JPanel panel = new JPanel(new BorderLayout(8, 8));
-        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-
-        List<BookInfo> sorted = lookup.letBookHashMap.values().stream()
-            .sorted((a, b) -> Double.compare(
-                parseRating(b.getAverageRating()),
-                parseRating(a.getAverageRating())))
-            .limit(TOP_N)
-            .collect(Collectors.toList());
-
-        DefaultListModel<String> listModel = new DefaultListModel<>();
-        for (BookInfo book : sorted) {
-            listModel.addElement(String.format("%.2f  %s",
-                parseRating(book.getAverageRating()), book.getTitle()));
-        }
-
-        JList<String> bookList = new JList<>(listModel);
-        bookList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        JScrollPane listScroll = new JScrollPane(bookList);
-        listScroll.setPreferredSize(new Dimension(380, 0));
-        listScroll.setBorder(BorderFactory.createTitledBorder("Top " + TOP_N + " Books by Rating"));
-
-        JTextArea detailArea = makeDetailArea();
-        JScrollPane detailScroll = new JScrollPane(detailArea);
-        detailScroll.setBorder(BorderFactory.createTitledBorder("Book Details"));
-
-        JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, listScroll, detailScroll);
-        split.setDividerLocation(380);
-        panel.add(split, BorderLayout.CENTER);
-
-        bookList.addListSelectionListener(e -> {
-            if (e.getValueIsAdjusting()) return;
-            int idx = bookList.getSelectedIndex();
-            if (idx < 0 || idx >= sorted.size()) return;
-            BookInfo book = sorted.get(idx);
-            detailArea.setText(book.toString());
-            detailArea.setCaretPosition(0);
-        });
-
-        return panel;
-    }
-
-    private JTextArea makeDetailArea() {
-        JTextArea area = new JTextArea();
-        area.setEditable(false);
-        area.setLineWrap(true);
-        area.setWrapStyleWord(true);
-        area.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
-        return area;
-    }
-
-    private double parseRating(String rating) {
-        try {
-            return Double.parseDouble(rating.trim());
-        } catch (Exception e) {
-            return 0.0;
-        }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                new BookRecommenderGUI();
-            } catch (Exception ex) {
-                ex.printStackTrace();
+        // show details of selected book
+        lineup.addListSelectionListener(e -> {
+            String handle = lineup.getSelectedValue();
+            if (handle != null) {
+                BookInfo bookie = peep.search(handle);
+                if (bookie != null) {
+                    tea.setText(bookie.toString());
+                    tea.setCaretPosition(0);
+                }
             }
         });
+
+        return vibe;
     }
+
+
+public static void main(String[] args){
+    try {
+        new BookRecommenderGUI();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
 }

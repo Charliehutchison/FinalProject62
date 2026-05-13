@@ -55,6 +55,11 @@ public class BookInfo {
     public String getAuthors() { return authors; }
     public String getNumPages()      { return numPages; }
     public String getGenres()        { return genres; }
+    public String getPublisher()     { return publisher; }
+    public String getLanguage()      { return language; }
+    public String getPublicationDate() { return publicationDate; }
+    public String getDescription()   { return description; }
+    public String getUrl()           { return url; }
 
     /**
      * Overriding toString method to cleanly print book information
