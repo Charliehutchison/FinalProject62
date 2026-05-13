@@ -128,7 +128,8 @@ public class BookRecommenderGUI extends JFrame {
         vibe.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         List<BookInfo> ranked = new ArrayList<>(peep.getAllBooks());
-        SortBooksByRatingQuickSort.quickSortByRating(ranked, 0, ranked.size() - 1, 0);
+        SortBooksByRatingQuickSort.quickSortBooks(ranked, 0, ranked.size() - 1);
+        
 
     }
 

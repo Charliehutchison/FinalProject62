@@ -176,4 +176,49 @@ public class SortBooksByRatingQuickSort {
         }
         return line.toString();
     }
+
+public static void quickSortBooks(List<BookInfo> books, int left, int right) {
+    if (left >= right) {
+        return;
+    }
+
+    int splitIndex = partitionBooks(books, left, right);
+
+    if (left < splitIndex - 1) {
+        quickSortBooks(books, left, splitIndex - 1);
+    }
+    if (splitIndex < right) {
+        quickSortBooks(books, splitIndex, right);
+    }
+}
+
+static int partitionBooks(List<BookInfo> books, int left, int right) {
+    double pivotRating = ratingOf(books.get(left));
+
+    int i = left;
+    int j = right;
+
+    while (i <= j) {
+        while (ratingOf(books.get(i)) > pivotRating) {
+            i++;
+        }
+        while (ratingOf(books.get(j)) < pivotRating) {
+            j--;
+        }
+        if (i <= j) {
+            Collections.swap(books, i, j);
+            i++;
+            j--;
+        }
+    }
+    return i;
+}
+
+static double ratingOf(BookInfo book) {
+    try {
+        return Double.parseDouble(book.getAverageRating().trim());
+    } catch (Exception e) {
+        return Double.NEGATIVE_INFINITY;
+    }
+}
 }
