@@ -30,7 +30,7 @@ public class BookRecommenderGUI extends JFrame {
 
         JTabbedPane decks = new JTabbedPane();
         decks.addTab("Search", makeSearch());
-        // decks.addTab("Top Rated", makeGoats());
+        decks.addTab("Top Rated", makeGoats());
         // decks.addTab("Similar Books", makeTwins());
         // decks.addTab("Browse by Genre", makeGenre());
         // decks.addTab("Filter", makeFilter());
@@ -119,6 +119,18 @@ public class BookRecommenderGUI extends JFrame {
         return vibe;
     }
 
+    //-----------------------------
+    // Top rated GOATS
+    //-----------------------------
+    private JPanel makeGoats(){
+        //this stays the same because it's the big window
+        JPanel vibe = new JPanel(new BorderLayout(8, 8));
+        vibe.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        List<BookInfo> ranked = new ArrayList<>(peep.getAllBooks());
+        SortBooksByRatingQuickSort.quickSortByRating(ranked, 0, ranked.size() - 1, 0);
+
+    }
 
 public static void main(String[] args){
     try {
