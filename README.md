@@ -110,10 +110,18 @@ Examples:
 
 ### BookRecommenderGUI
 
-- `BookRecommenderGUI()` — builds the tabs (search, top rated, similar books, genre).
-- `main` — starts the Swing window.
+A Swing GUI that combines all features into one window. Five tabs:
 
-Example: `java -cp bin bookbridge.BookRecommenderGUI` (needs a display).
+- Search — type a title to search for a book, or the closest match if the book is not in the database
+- Top Rated — shows the top 100 books by rating using SortBooksByRatingQuickSort.quickSortBooks on a List<BookInfo>.
+- Similar Books — takes the title from input and finds best matches for the typed book or closest title match
+- Browse by Genre — uses the dropdown menu with all genres present in the dataset and filtering feature
+- Filter — uses dropdown menu with categories (year, genre, language, etc) and a typed input or dropdown menu for search
+
+- `BookRecommenderGUI()` — loads the dataset and builds all tabs.
+- `main` — opens the Swing window.
+
+Run: `java -cp bin bookbridge.BookRecommenderGUI` (needs a display).
 
 ## Features (assignment mapping)
 
