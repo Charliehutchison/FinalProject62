@@ -120,7 +120,7 @@ public class BookRecommenderGUI extends JFrame {
     }
 
     //-----------------------------
-    // Top rated GOATS
+    // GOATS
     //-----------------------------
     private JPanel makeGoats(){
         //this stays the same because it's the big window
@@ -181,7 +181,6 @@ public class BookRecommenderGUI extends JFrame {
     private JPanel makeGenre(){
         JPanel vibe = new JPanel(new BorderLayout(8, 8));
         vibe.setBorder(new EmptyBorder(10, 10, 10, 10));
-
 
         //DROPDOWN!!!
         //needs a method to extract all existing genres
@@ -251,7 +250,36 @@ public class BookRecommenderGUI extends JFrame {
         JPanel vibe = new JPanel(new BorderLayout(8, 8));
         vibe.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        
+        JTextField og = new JTextField();
+        JButton yeet = new JButton("Find Similar");
+        JLabel vibes = new JLabel(" ");
+
+        JPanel crown = new JPanel(new BorderLayout(6, 0));
+        crown.add(new JLabel("Seed Title:  "), BorderLayout.WEST);
+        crown.add(og, BorderLayout.CENTER);
+        crown.add(yeet, BorderLayout.EAST);
+
+        JPanel lid = new JPanel(new BorderLayout(0, 4));
+        lid.add(crown, BorderLayout.NORTH);
+        lid.add(vibes, BorderLayout.SOUTH);
+        vibe.add(lid, BorderLayout.NORTH);
+
+        DefaultListModel<String> feed = new DefaultListModel<>();
+        JList<String> lineup = new JList<>(feed);
+        lineup.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane swipe = new JScrollPane(lineup);
+        swipe.setBorder(BorderFactory.createTitledBorder("Recommended"));
+
+        JTextArea tea = new JTextArea();
+        tea.setEditable(false);
+        tea.setLineWrap(true);
+        tea.setWrapStyleWord(true);
+        JScrollPane tealeaf = new JScrollPane(tea);
+        tealeaf.setBorder(BorderFactory.createTitledBorder("Book Details"));
+
+        JSplitPane beef = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, swipe, tealeaf);
+        beef.setDividerLocation(340);
+        vibe.add(beef, BorderLayout.CENTER);
 
 
         return vibe;
@@ -264,8 +292,48 @@ public class BookRecommenderGUI extends JFrame {
         JPanel vibe = new JPanel(new BorderLayout(8, 8));
         vibe.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        
+        // dropdown
+        String[] flavas = { "genre", "author", "language", "year" };
+        JComboBox<String> mood = new JComboBox<>(flavas);
+        JTextField gab = new JTextField(15);
+        JComboBox<String> lewks = new JComboBox<>(distinctGenres().toArray(new String[0]));
 
+        gab.setVisible(false);
+        lewks.setVisible(true);
+
+        JCheckBox tiered = new JCheckBox("Sort by rating", true);
+        JButton yeet = new JButton("Apply");
+        JLabel vibes = new JLabel(" ");
+
+        JPanel dash = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 4));
+        dash.add(new JLabel("Filter by:"));
+        dash.add(mood);
+        dash.add(gab);
+        dash.add(lewks);
+        dash.add(tiered);
+        dash.add(yeet);
+
+        JPanel lid = new JPanel(new BorderLayout(0, 4));
+        lid.add(dash, BorderLayout.CENTER);
+        lid.add(vibes, BorderLayout.SOUTH);
+        vibe.add(lid, BorderLayout.NORTH);
+
+        DefaultListModel<String> feed = new DefaultListModel<>();
+        JList<String> lineup = new JList<>(feed);
+        lineup.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane swipe = new JScrollPane(lineup);
+        swipe.setBorder(BorderFactory.createTitledBorder("Matching Books"));
+
+        JTextArea tea = new JTextArea();
+        tea.setEditable(false);
+        tea.setLineWrap(true);
+        tea.setWrapStyleWord(true);
+        JScrollPane tealeaf = new JScrollPane(tea);
+        tealeaf.setBorder(BorderFactory.createTitledBorder("Book Details"));
+
+        JSplitPane beef = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, swipe, tealeaf);
+        beef.setDividerLocation(400);
+        vibe.add(beef, BorderLayout.CENTER);
 
         return vibe;
     }
