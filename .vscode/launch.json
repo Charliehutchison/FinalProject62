@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "BookRecommenderGUI",
+            "request": "launch",
+            "mainClass": "bookbridge.BookRecommenderGUI",
+            "projectName": "FinalProject62_bc402948"
+        },
+        {
+            "type": "java",
             "name": "SortBooksByRatingQuickSort",
             "request": "launch",
             "mainClass": "SortBooksByRatingQuickSort",

@@ -11,7 +11,10 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 /**
- * window for the Book Recommender
+ * Swing window for the Book Recommender
+ * Builds: Search, Top Rated, Similar Books, Browse by Genre, Filter
+ * using Lookup, BookRecommender, FilterBooks, and quicksort classes.
+ *
  */
 public class BookRecommenderGUI extends JFrame {
 
@@ -21,6 +24,12 @@ public class BookRecommenderGUI extends JFrame {
     private Lookup peep;
     private BookRecommender plug;
 
+    /**
+     * constructor
+     * Loads the data and creates the window.
+     *
+     * @throws IOException if the csv file can't be read
+     */
     public BookRecommenderGUI() throws IOException {
         peep = new Lookup(BIBLE);
         plug = new BookRecommender(BIBLE);
@@ -44,6 +53,12 @@ public class BookRecommenderGUI extends JFrame {
     // ------------------------------------------------------------
     // Search
     // ------------------------------------------------------------
+    /**
+     * Search tab
+     * returns an input match/closest matches
+     *
+     * @return JPanel for the Search tab
+     */
     private JPanel makeSearch() {
         JPanel vibe = new JPanel(new BorderLayout(8, 8));
         vibe.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -124,6 +139,12 @@ public class BookRecommenderGUI extends JFrame {
     //-----------------------------
     // GOATS
     //-----------------------------
+    /**
+     * Top Rated tab
+     * uses our quicksort, shows top GOATS books
+     *
+     * @return JPanel for the Top Rated tab
+     */
     private JPanel makeGoats(){
         //this stays the same because it's the big window
         JPanel vibe = new JPanel(new BorderLayout(8, 8));
@@ -172,6 +193,12 @@ public class BookRecommenderGUI extends JFrame {
     // BY GENRE!
     //-----------------------------
     //extract genres
+    /**
+     * iterates thru every book and extracts all existing genres
+     * separated by comma
+     *
+     * @return alphabetically sorted list of unique genre names
+     */
     private List<String> distinctGenres() {
         ArrayList<String> squad = new ArrayList<>();
         for (BookInfo bookie : peep.getAllBooks()) {
@@ -186,6 +213,12 @@ public class BookRecommenderGUI extends JFrame {
         return squad;
     }
 
+    /**
+     * Browse by Genre tab
+     * filters by genre from dropdown meny we extrascted in the previous helper
+     *
+     * @return JPanel for the Browse by Genre tab
+     */
     private JPanel makeGenre(){
         JPanel vibe = new JPanel(new BorderLayout(8, 8));
         vibe.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -256,6 +289,12 @@ public class BookRecommenderGUI extends JFrame {
     //-----------------------------
     // SIMILAR BOOKS
     //-----------------------------
+    /**
+     * Similar Books tab
+     * uses book recommender to give recommendation on the inputted title or the closest match to it
+     *
+     * @return JPanel for the Similar Books tab
+     */
     private JPanel makeTwins(){
         JPanel vibe = new JPanel(new BorderLayout(8, 8));
         vibe.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -341,6 +380,12 @@ public class BookRecommenderGUI extends JFrame {
     //-----------------------------
     // FIlter
     //-----------------------------
+    /**
+     * Filter tab
+     * Tuses FilterBooks and optional quicksort by rating
+     *
+     * @return JPanel for the Filter tab
+     */
     private JPanel makeFilter(){
         JPanel vibe = new JPanel(new BorderLayout(8, 8));
         vibe.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -475,6 +520,12 @@ public class BookRecommenderGUI extends JFrame {
         return vibe;
     }
 
+    /**
+     * same as genres but languages
+     * creates a list of all existing languages separated b comma
+     *
+     * @return alphabetically sorted list of unique language codes
+     */
     private List<String> distinctLanguages() {
         List<String> squad = new ArrayList<>();
         for (BookInfo bookie : peep.getAllBooks()) {
@@ -487,6 +538,12 @@ public class BookRecommenderGUI extends JFrame {
         return squad;
     }
 
+    /**
+     *parses a rating string into a double or 0.0 if can't be parsed
+     *
+     * @param clout the string rating
+     * @return the double rating or 0.0 
+     */
     private double parseRating(String clout) {
             if (clout == null) {
                 return 0.0;
@@ -499,6 +556,12 @@ public class BookRecommenderGUI extends JFrame {
         }
         
 
+    /**
+     * main.
+     *
+     *
+     * @param args command line args
+     */
     public static void main(String[] args){
         try {
             new BookRecommenderGUI();
