@@ -1,4 +1,5 @@
 # BookBridge
+//This ReadMe was written entirely by our group. However,  I, Charlie, wanted the ReadMe to look as stylish as our assignments so I gave AI the following prompt: Help me style this ReadMe so it looks clean when reading on GitHub.
 
 This project reads a merged books CSV. There is a lookup program (hash map by title), command-line filter/sort tools, a recommender that suggests similar books or books by genre keyword, and a simple Swing GUI.
 
