@@ -2,7 +2,7 @@
 
 This project reads a merged books CSV. There is a lookup program (hash map by title), command-line filter/sort tools, a recommender that suggests similar books or books by genre keyword, and a simple Swing GUI.
 
-**Dataset:** `datasets/books_merged_clean.csv` is in the repo. Nothing sensitive for our use; if your instructor says otherwise, mention it in the Gradescope PDF instead.
+**Dataset:** `datasets/books_merged_clean.csv` is in the repo.
 
 **Libraries:** JDK only. No extra jars, no `/lib` folder.
 
