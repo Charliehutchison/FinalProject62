@@ -48,6 +48,7 @@ toString() — returns a formatted string with all book information for display.
 
 ### Usage Examples
 
+```
 Enter book title (or 'quit' to exit): harry potter
 Did you mean:
 1. harry potter and the half-blood prince (harry potter  #6)
@@ -64,12 +65,13 @@ Enter number: 1
  Pages: 652
  Language: ENG
  ISBN: 0439785960
- Average Rating: 4.57 ⭐  (2095690 ratings)
+ Average Rating: 4.57 (2095690 ratings)
  Genres: Fantasy, Young Adult, Fiction, Magic, Childrens, Adventure
  Description: It is the middle of the summer, but there is an unseasonal mist...
 
  More Info: https://www.goodreads.com/book/show/1.Harry_Potter_and_the_Half_Blood_Prince
 ============================================================
+```
 
 ## Feature 2:
 Sort CSV by rating with the following CLI argument:
