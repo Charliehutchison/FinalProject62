@@ -21,7 +21,7 @@ public class BookRecommenderGUI extends JFrame {
 
     public BookRecommenderGUI() throws IOException {
         peep = new Lookup(BIBLE);
-        //plug = new BookRecommender(BIBLE);
+        plug = new BookRecommender(BIBLE);
 
         setTitle("Book Recommender");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -217,6 +217,10 @@ public class BookRecommenderGUI extends JFrame {
         yeet.addActionListener(e -> {
             String OG = (String) grower.getSelectedItem();
             feed.clear();
+            tea.setText("");
+            if (OG == null || OG.isEmpty()) {
+                return;
+            }
             List<String> bets = plug.getRecommendationsByGenre(OG);
             for (String handle : bets) {
                 feed.addElement(handle);
@@ -228,9 +232,11 @@ public class BookRecommenderGUI extends JFrame {
 
         lineup.addListSelectionListener(e -> {
             String handle = lineup.getSelectedValue();
-            BookInfo bookie = peep.search(handle);
-            tea.setText(bookie.toString());
-            tea.setCaretPosition(0);
+            if (handle != null) {
+                BookInfo bookie = peep.search(handle);
+                tea.setText(bookie.toString());
+                tea.setCaretPosition(0);
+            }
         });
 
 
