@@ -5,8 +5,6 @@ public interface BookRecommenderInterface {
     // Loads book data from a file into the data structure
     void loadData(String filename);
 
-    // Adds a user rating for a specific book
-    void addUserRating(String bookTitle, double rating);
 
     // Returns a list of recommended books based on a title the user likes
     List<String> getRecommendations(String bookTitle);
