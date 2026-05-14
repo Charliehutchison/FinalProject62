@@ -1,6 +1,5 @@
 /**
  * Stores all the data for a book object
- * @author Tara Kamshad
  */
 public class BookInfo {
     private String bookId;

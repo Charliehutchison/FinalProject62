@@ -217,7 +217,7 @@ public class BookRecommender implements BookRecommenderInterface {
         BookRecommender rec = new BookRecommender(csv);
 
         System.out.println("Book recommender — dataset: " + csv);
-        System.out.println("Enter a title you’ve read (exactly as in the catalog).");
+        System.out.println("Enter a title you’ve read.");
         System.out.println("Or: genre <keyword>   (example: genre fantasy)");
         System.out.println("Type quit when done.");
         System.out.println();

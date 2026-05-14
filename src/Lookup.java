@@ -1,7 +1,6 @@
 /**
  * In this class, users can interact with the terminal by typing in the title of a book and recieving relevant information about the book.
  * This class utilizes a Hash Map to store book objects.
- * @author Tara Kamshad
  **/
 
 import java.io.*;
