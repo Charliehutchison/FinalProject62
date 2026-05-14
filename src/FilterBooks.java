@@ -4,6 +4,72 @@ import java.util.*;
 
 public class FilterBooks {
 
+    // runs the filter and returns the matching rows (callable from anywhere, e.g. the GUI)
+    public static List<String[]> filter(String inputPath, String filter, String value) throws IOException {
+        Path input = Path.of(inputPath);
+        String f = filter.toLowerCase();
+        String v = value.toLowerCase();
+
+        Map<String, String> names = new HashMap<>();
+        names.put("author", "primary_author");
+        names.put("genre", "genres");
+        names.put("language", "language_code");
+        names.put("year", "publication_date");
+
+        String column = names.getOrDefault(f, f);
+        HashMap<String, List<String[]>> index = new HashMap<>();
+
+        try (BufferedReader br = Files.newBufferedReader(input)) {
+            String[] headers = parseCsvLine(br.readLine());
+            int col = -1;
+            for (int i = 0; i < headers.length; i++) {
+                if (headers[i].equalsIgnoreCase(column)) {
+                    col = i;
+                    break;
+                }
+            }
+            if (col == -1) {
+                return new ArrayList<>();
+            }
+
+            boolean isGenre = column.equalsIgnoreCase("genres");
+            boolean isYear  = column.equalsIgnoreCase("publication_date");
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] row = parseCsvLine(line);
+                if (col >= row.length) continue;
+
+                if (isGenre) {
+                    for (String g : row[col].split(",")) {
+                        String key = g.trim().toLowerCase();
+                        if (!key.isEmpty()) {
+                            if (!index.containsKey(key)) {
+                                index.put(key, new ArrayList<>());
+                            }
+                            index.get(key).add(row);
+                        }
+                    }
+                } else if (isYear) {
+                    String date = row[col];
+                    String yr = date.length() >= 4 ? date.substring(0, 4) : date;
+                    if (!index.containsKey(yr)) {
+                        index.put(yr, new ArrayList<>());
+                    }
+                    index.get(yr).add(row);
+                } else {
+                    String key = row[col].toLowerCase();
+                    if (!index.containsKey(key)) {
+                        index.put(key, new ArrayList<>());
+                    }
+                    index.get(key).add(row);
+                }
+            }
+        }
+
+        return index.getOrDefault(v, new ArrayList<>());
+    }
+
     public static void main(String[] args) throws IOException {
 
         // filtering system

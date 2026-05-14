@@ -25,7 +25,7 @@ public class BookRecommenderGUI extends JFrame {
 
         setTitle("Book Recommender");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1920, 1080);
+        setSize(1100, 720);
         setLocationRelativeTo(null);
 
         JTabbedPane decks = new JTabbedPane();
@@ -129,7 +129,7 @@ public class BookRecommenderGUI extends JFrame {
         
         SortBooksByRatingQuickSort.quickSortBooks(ranked, 0, ranked.size() - 1);
         // TOP 100
-        List<BookInfo> cream = ranked.subList(0, GOATS-1);
+        List<BookInfo> cream = ranked.subList(0, GOATS);
 
         DefaultListModel<String> feed = new DefaultListModel<>();
         for (BookInfo bookie : cream){
@@ -139,22 +139,28 @@ public class BookRecommenderGUI extends JFrame {
         JList<String> lineup = new JList<>(feed);
         lineup.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane swipe = new JScrollPane(lineup);
-        swipe.setBorder(BorderFactory.createTitledBorder("Top" + GOATS + "books by rating"));
-        
+        swipe.setBorder(BorderFactory.createTitledBorder("Top " + GOATS + " books by rating"));
+
         JTextArea tea = new JTextArea();
         tea.setEditable(false);
+        tea.setLineWrap(true);
+        tea.setWrapStyleWord(true);
         JScrollPane tealeaf = new JScrollPane(tea);
         tealeaf.setBorder(BorderFactory.createTitledBorder("Book details"));
-        
+
         JSplitPane beef = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, swipe, tealeaf);
         beef.setDividerLocation(380);
         vibe.add(beef, BorderLayout.CENTER);
 
         lineup.addListSelectionListener(e -> {
             String handle = lineup.getSelectedValue();
-            BookInfo bookie = peep.search(handle);
-            tea.setText(bookie.toString());
-            tea.setCaretPosition(0);
+            if (handle != null) {
+                BookInfo bookie = peep.search(handle);
+                if (bookie != null) {
+                    tea.setText(bookie.toString());
+                    tea.setCaretPosition(0);
+                }
+            }
         });
         return vibe;
 
@@ -185,7 +191,7 @@ public class BookRecommenderGUI extends JFrame {
         //DROPDOWN!!!
         //needs a method to extract all existing genres
         List<String> genres = distinctGenres();
-        JComboBox grower = new JComboBox<>(genres.toArray(new String[0]));
+        JComboBox<String> grower = new JComboBox<>(genres.toArray(new String[0]));
         JButton yeet = new JButton("Search");
         JPanel crown = new JPanel(new BorderLayout(6, 0));
         crown.add(new JLabel("Search by Title:  "), BorderLayout.WEST);
@@ -233,8 +239,10 @@ public class BookRecommenderGUI extends JFrame {
             String handle = lineup.getSelectedValue();
             if (handle != null) {
                 BookInfo bookie = peep.search(handle);
-                tea.setText(bookie.toString());
-                tea.setCaretPosition(0);
+                if (bookie != null) {
+                    tea.setText(bookie.toString());
+                    tea.setCaretPosition(0);
+                }
             }
         });
 
@@ -281,6 +289,49 @@ public class BookRecommenderGUI extends JFrame {
         beef.setDividerLocation(340);
         vibe.add(beef, BorderLayout.CENTER);
 
+        yeet.addActionListener(e -> {
+            String lewk = og.getText().trim();
+            feed.clear();
+            tea.setText("");
+            vibes.setText(" ");
+            if (lewk.isEmpty()) {
+                return;
+            }
+        
+            String legit = lewk;
+            if (!plug.containsBook(lewk)) {
+                List<String> pings = peep.suggest(lewk);
+                if (pings.isEmpty()) {
+                    vibes.setText("No book matched \"" + lewk + "\".");
+                    return;
+                }
+                legit = pings.get(0);
+                vibes.setText("Using closest match: " + peep.search(legit).getTitle());
+            }
+
+            List<String> bets = plug.getRecommendations(legit);
+            if (bets.isEmpty()) {
+                vibes.setText("No related titles found.");
+                return;
+            }
+            for (String handle : bets) {
+                feed.addElement(handle);
+            }
+            lineup.setSelectedIndex(0);
+        });
+
+        og.addActionListener(e -> yeet.doClick());
+
+        lineup.addListSelectionListener(e -> {
+            String handle = lineup.getSelectedValue();
+            if (handle != null) {
+                BookInfo bookie = peep.search(handle);
+                if (bookie != null) {
+                    tea.setText(bookie.toString());
+                    tea.setCaretPosition(0);
+                }
+            }
+        });
 
         return vibe;
     }
@@ -297,9 +348,11 @@ public class BookRecommenderGUI extends JFrame {
         JComboBox<String> mood = new JComboBox<>(flavas);
         JTextField gab = new JTextField(15);
         JComboBox<String> lewks = new JComboBox<>(distinctGenres().toArray(new String[0]));
+        JComboBox<String> language = new JComboBox<>(distinctLanguages().toArray(new String[0]));
 
         gab.setVisible(false);
         lewks.setVisible(true);
+        language.setVisible(false);
 
         JCheckBox tiered = new JCheckBox("Sort by rating", true);
         JButton yeet = new JButton("Apply");
@@ -310,6 +363,7 @@ public class BookRecommenderGUI extends JFrame {
         dash.add(mood);
         dash.add(gab);
         dash.add(lewks);
+        dash.add(language);
         dash.add(tiered);
         dash.add(yeet);
 
@@ -335,8 +389,113 @@ public class BookRecommenderGUI extends JFrame {
         beef.setDividerLocation(400);
         vibe.add(beef, BorderLayout.CENTER);
 
+        mood.addActionListener(e -> {
+            String pick = (String) mood.getSelectedItem();
+            gab.setVisible(false);
+            lewks.setVisible(false);
+            language.setVisible(false);
+            if ("genre".equals(pick)) {
+                lewks.setVisible(true);
+            } else if ("language".equals(pick)) {
+                language.setVisible(true);
+            } else {
+                gab.setVisible(true);
+            }
+            dash.revalidate();
+            dash.repaint();
+        });
+
+        final List<BookInfo> crew = new ArrayList<>();
+
+        yeet.addActionListener(e -> {
+            String pick = (String) mood.getSelectedItem();
+
+            String lewk;
+            if ("genre".equals(pick)) {
+                Object sel = lewks.getSelectedItem();
+                lewk = (sel == null) ? "" : sel.toString();
+            } else if ("language".equals(pick)) {
+                Object sel = language.getSelectedItem();
+                lewk = (sel == null) ? "" : sel.toString();
+            } else {
+                lewk = gab.getText().trim();
+            }
+
+            feed.clear();
+            tea.setText("");
+            crew.clear();
+
+            if (lewk.isEmpty()) {
+                vibes.setText("Enter a value to filter by.");
+                return;
+            }
+
+            // run the filter and optionally sort with our quicksort
+            List<String[]> rows;
+            try {
+                rows = FilterBooks.filter(BIBLE, pick, lewk);
+            } catch (IOException ex) {
+                rows = new ArrayList<>();
+            }
+
+            List<BookInfo> dubs = new ArrayList<>();
+            for (String[] row : rows) {
+                BookInfo bookie = peep.search(row[1]);
+                if (bookie != null) {
+                    dubs.add(bookie);
+                }
+            }
+
+            // optionally sort matches by rating using our quicksort
+            if (tiered.isSelected()) {
+                SortBooksByRatingQuickSort.quickSortBooks(dubs, 0, dubs.size() - 1);
+            }
+            crew.addAll(dubs);
+
+            for (BookInfo bookie : dubs) {
+                double clout = parseRating(bookie.getAverageRating());
+                feed.addElement(String.format("%.2f  %s", clout, bookie.getTitle()));
+            }
+            vibes.setText(dubs.size() + " result" + (dubs.size() == 1 ? "" : "s")
+                    + (tiered.isSelected() ? " (sorted by rating)" : ""));
+        });
+
+        gab.addActionListener(e -> yeet.doClick());
+
+        lineup.addListSelectionListener(e -> {
+            int slot = lineup.getSelectedIndex();
+            if (slot >= 0 && slot < crew.size()) {
+                BookInfo bookie = crew.get(slot);
+                tea.setText(bookie.toString());
+                tea.setCaretPosition(0);
+            }
+        });
         return vibe;
     }
+
+    private List<String> distinctLanguages() {
+        List<String> squad = new ArrayList<>();
+        for (BookInfo bookie : peep.getAllBooks()) {
+            String lingo = bookie.getLanguage().trim();
+            if (!squad.contains(lingo)) {
+                squad.add(lingo);
+            }
+        }
+        Collections.sort(squad);
+        return squad;
+    }
+
+    private double parseRating(String clout) {
+            if (clout == null) {
+                return 0.0;
+            }
+            try {
+                return Double.parseDouble(clout.trim());
+            } catch (NumberFormatException e) {
+                return 0.0;
+            }
+        }
+        
 
     public static void main(String[] args){
         try {
