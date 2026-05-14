@@ -1,6 +1,9 @@
 /**
  * Stores all the data for a book object
  */
+
+package bookbridge;
+
 public class BookInfo {
     private String bookId;
     private String title;

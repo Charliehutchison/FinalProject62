@@ -3,6 +3,8 @@
  * This class utilizes a Hash Map to store book objects.
  **/
 
+package bookbridge;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;

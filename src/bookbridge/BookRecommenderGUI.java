@@ -1,6 +1,8 @@
 //so I used claude to show me an example of a gui and now i'm gonna try to recreate it WISH ME LUCK
 // this is art
 
+package bookbridge;
+
 import java.awt.*;
 import java.io.IOException;
 import java.util.*;
