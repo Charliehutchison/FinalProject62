@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "SortBooksByRatingQuickSort",
+            "request": "launch",
+            "mainClass": "SortBooksByRatingQuickSort",
+            "projectName": "FinalProject62-1_705731a1"
+        },
+        {
+            "type": "java",
+            "name": "FilterBooks",
+            "request": "launch",
+            "mainClass": "FilterBooks",
+            "projectName": "FinalProject62-1_705731a1"
+        },
+        {
+            "type": "java",
+            "name": "BookRecommenderGUI",
+            "request": "launch",
+            "mainClass": "BookRecommenderGUI",
+            "projectName": "FinalProject62-1_705731a1"
+        },
+        {
+            "type": "java",
             "name": "BookRecommender",
             "request": "launch",
             "mainClass": "BookRecommender",
