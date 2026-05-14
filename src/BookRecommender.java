@@ -43,11 +43,6 @@ public class BookRecommender implements BookRecommenderInterface {
         }
     }
 
-    @Override
-    public void addUserRating(String bookTitle, double rating) {
-        ensureLoaded();
-        // Reserved for future use (personal ratings aren’t used in this simple scorer).
-    }
 
     /**
      * Other books that share genres with this one, or the same primary author.

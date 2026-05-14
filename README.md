@@ -1,13 +1,12 @@
-# Introduction 
+# BookBridge
 
-Our project tackles a problem every reader knows too well: not knowing what to read next. In 2021, Vogue published an article titled “Life's Too Short to Finish Books You Don't Like,” highlighting the very real frustration of picking up a book that just doesn't click. A 2017 UK study backed this up, finding that 35% of adults struggle to find a book they truly enjoy. We built BookBridge to change that.
+This project reads a merged books CSV. There is a lookup program (hash map by title), command-line filter/sort tools, a recommender that suggests similar books or books by genre keyword, and a simple Swing GUI.
 
-BookBridge has three features wrapped in a Graphical User Interface, all designed to help readers spend less time searching and more time reading. The first feature uses a Hash Table so readers can instantly look up information about any book they're curious about, like descriptions, genres, ratings, and more. The second feature lets readers filter books by parameters like genre, author, language, publisher, and year, then sort the results by rating to find the best of the best. The third feature is a personalized book recommender. Just enter a book or genre you've enjoyed, and BookBridge will suggest what to read next.
+**Dataset:** `datasets/books_merged_clean.csv` is in the repo. Nothing sensitive for our use; if your instructor says otherwise, mention it in the Gradescope PDF instead.
 
-## How to Run
+**Libraries:** JDK only. No extra jars, no `/lib` folder.
 
-Compile all files first:
-javac -d bin src/*.java
+## How to run
 
 ## Feature 1: Book Lookup
 Enter a book title to receive information about the book. The search is case-insensitive and supports partial title matching. Keep entering books, or type 'quit' to exit.
@@ -16,79 +15,101 @@ To compile and run:
 javac -d bin src/*.java
 java -cp bin Lookup
 
-## Public API
+Programs:
 
-### Lookup (Hash Table)
+- Lookup: `java -cp bin Lookup`
+- Recommender (terminal): `java -cp bin BookRecommender datasets/books_merged_clean.csv` — or leave off the path; it defaults to `datasets/books_merged_clean.csv`
+- GUI: `java -cp bin BookRecommenderGUI`
+- Sort by rating: `java -cp bin SortBooksByRatingQuickSort datasets/books_merged_clean.csv datasets/out_sorted.csv`
+- Filter: `java -cp bin FilterBooks datasets/books_merged_clean.csv genre Fantasy`
 
-Lookup(String filepath) — constructor that loads the CSV file at the given filepath into the hash table.
+Filter types for FilterBooks: `genre`, `author`, `language`, `publisher`, `year`.
 
-search(String title) — takes a book title, returns a BookInfo object or null if not found. Lookup is case-insensitive.
+Sample Lookup output (real run for title `1984`):
 
-suggest(String prefix) — takes a partial title, returns a List of titles that start with that prefix.
+```
+Enter book title (or 'quit' to exit): 
+1984
 
-getAllBooks() — returns a Collection of all BookInfo objects in the dataset.
+============================================================
+ 1984
+============================================================
+ Author(s): George Orwell
+ Publisher: Signet Classics
+ Published: 1981-07-01
+ Pages: 268
+ Language: ENG
+ ISBN: 0451516753
+ Average Rating: 4.18 ⭐  (1322 ratings)
+ Genres:  Classics, Fiction, Science Fiction, ...
+ Description: The new novel by George Orwell ...
+ More Info: https://www.goodreads.com/book/show/61439040-1984
+============================================================
+```
+
+## Public API (methods + examples)
+
+### Lookup
+
+Constructor `Lookup(String filepath)` loads the CSV into a HashMap keyed by lowercased title.
+
+- `BookInfo search(String title)`: exact match on title (case-insensitive). Returns `null` if missing. Example: `search("1984")` returns the BookInfo for 1984 or null.
+- `List<String> suggest(String prefix)`: titles whose key starts with `prefix` (lowercased). Example: `suggest("harry")` returns keys like harry potter entries.
+- `Collection<BookInfo> getAllBooks()`: all loaded books (used by the recommender).
 
 ### BookInfo
 
-BookInfo(String bookId, String title, String primaryAuthor, String authors, String publisher, String publicationDate, String language, String numPages, String isbn, String isbn13, String averageRating, String ratingsCount, String textReviewsCount, String genres, String description, String url) — constructor that creates a book object with all fields.
+Constructor takes the CSV fields as strings (see source). Getters like `getTitle()`, `getAverageRating()`, `getPrimaryAuthor()`, etc. `toString()` prints a readable block for the terminal.
 
-getTitle() — returns the book title.
-getAverageRating() — returns the average rating.
-getRatingsCount() — returns the number of ratings.
-getPrimaryAuthor() — returns the primary author.
-getAuthors() — returns all authors.
-getNumPages() — returns the number of pages.
-getGenres() — returns the genres.
-getPublisher() — returns the publisher.
-getLanguage() — returns the language code.
-getPublicationDate() — returns the publication date.
-getDescription() — returns the book description.
-getUrl() — returns the Goodreads URL.
-toString() — returns a formatted string with all book information for display.
+Example: if `book` is the row for 1984, `book.getAverageRating()` might return 
+`"4.19"`.
 
-### Usage Examples
+### BookRecommender
 
-```
-Enter book title (or 'quit' to exit): harry potter
-Did you mean:
-1. harry potter and the half-blood prince (harry potter  #6)
-2. harry potter and the order of the phoenix (harry potter  #5)
-3. harry potter and the prisoner of azkaban (harry potter  #3)
-Enter number: 1
+Implements `BookRecommenderInterface`. Keeps data in an internal Lookup.
 
-============================================================
- Harry Potter and the Half-Blood Prince (Harry Potter  #6)
-============================================================
- Author(s): J.K. Rowling
- Publisher: Scholastic Inc.
- Published: 2006-09-16
- Pages: 652
- Language: ENG
- ISBN: 0439785960
- Average Rating: 4.57 (2095690 ratings)
- Genres: Fantasy, Young Adult, Fiction, Magic, Childrens, Adventure
- Description: It is the middle of the summer, but there is an unseasonal mist...
-
- More Info: https://www.goodreads.com/book/show/1.Harry_Potter_and_the_Half_Blood_Prince
-============================================================
-```
-
-## Feature 2:
-Sort CSV by rating with the following CLI argument:
-java SortBooksByRatingQuickSort datasets/books_merged_clean.csv datasets/books_merged_clean_sorted_by_rating.csv
-
-If you have not compiled, run the following CLI argument.
-javac SortBooksByRatingQuickSort.java
-java SortBooksByRatingQuickSort datasets/books_merged_clean.csv datasets/books_merged_clean_sorted_by_rating.csv
-
-Filter books and print results to the console.
-java FilterBooks <input.csv> <filter> <value>
-The available filtering options to choose from. (genre, author, language, publisher, year)
+- `BookRecommender()` — empty; call `loadData(String filename)` before using.
+- `BookRecommender(String filename)` — loads from file.
+- `loadData(String filename)` — reload catalog (throws UncheckedIOException on bad IO).
+- `addUserRating(String bookTitle, double rating)` — stub right now; doesn’t change scores.
+- `List<String> getRecommendations(String bookTitle)` — up to 15 other titles (genre overlap / same primary author), sorted by our score + rating. Bad title → empty list.
+- `List<String> getRecommendationsByGenre(String genre)` — up to 15 titles whose genres field contains the substring (case-insensitive), sorted by average rating.
+- `boolean containsBook(String bookTitle)` — true if exact title is in the catalog.
 
 Examples:
-java FilterBooks datasets/books_merged_clean.csv author "J.K. Rowling";
-java FilterBooks datasets/books_merged_clean.csv year 2005
 
-If you have not compiled, run the following CLI argument for Fantasy genre for example.
-javac FilterBooks.java
-java FilterBooks datasets/books_merged_clean.csv genre Fantasy
+- `new BookRecommender("datasets/books_merged_clean.csv").containsBook("1984")` → `true` if that title exists.
+- `getRecommendations("Harry Potter and the Half-Blood Prince (Harry Potter  #6)")` → list of similar titles (max 15), not including the seed; spelling must match CSV.
+- `getRecommendationsByGenre("fantasy")` → up to 15 fantasy-ish rows by rating.
+
+`searchByTitle`, `searchByAuthor`, `filterByGenre`, `getTopRatedBooks`, `getAllBooksAlphabetically` are interface stubs returning empty lists — use FilterBooks / Lookup for that stuff.
+
+`main`: optional `args[0]` = CSV path. Prompts for exact title, or `genre something`, or `quit`.
+
+### SortBooksByRatingQuickSort
+
+`main` takes input CSV path and output CSV path. Finds `average_rating` from the header, quicksorts rows descending by rating, writes new file.
+
+Example: `java -cp bin SortBooksByRatingQuickSort datasets/books_merged_clean.csv datasets/sorted.csv` creates `datasets/sorted.csv`.
+
+### FilterBooks
+
+`main` takes: CSV path, filter name ,`genre`, `author`, `language`, `publisher`, `year`, value. Prints matching rows to stdout (values compared lowercase where it matters).
+
+Examples:
+
+- `java -cp bin FilterBooks datasets/books_merged_clean.csv author "j.k. rowling"`
+- `java -cp bin FilterBooks datasets/books_merged_clean.csv year 2005`
+
+### BookRecommenderGUI
+
+- `BookRecommenderGUI()` — builds the tabs (search, top rated, similar books, genre).
+- `main` — starts the Swing window.
+
+Example: `java -cp bin BookRecommenderGUI` (needs a display).
+
+## Features (assignment mapping)
+
+1. Lookup: run `Lookup`, CSV path is wired in `Lookup.main`.
+2. Filter/sort: `FilterBooks` and `SortBooksByRatingQuickSort` above.
+3. Recommendations: `BookRecommender` CLI or the Similar Books / Browse by Genre tabs in the GUI.
