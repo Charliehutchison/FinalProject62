@@ -6,22 +6,27 @@ This project reads a merged books CSV. There is a lookup program (hash map by ti
 
 **Libraries:** JDK only. No extra jars, no `/lib` folder.
 
+**Package:** All classes are in package `bookbridge` under `src/bookbridge/`.
+
 ## How to run
 
 ## Feature 1: Book Lookup
 Enter a book title to receive information about the book. The search is case-insensitive and supports partial title matching. Keep entering books, or type 'quit' to exit.
 
-To compile and run:
-javac -d bin src/*.java
-java -cp bin Lookup
+Compile once from the repo root (creates `bin/bookbridge/*.class`):
 
-Programs:
+```
+mkdir -p bin
+javac -encoding UTF-8 -d bin src/bookbridge/*.java
+```
 
-- Lookup: `java -cp bin Lookup`
-- Recommender (terminal): `java -cp bin BookRecommender datasets/books_merged_clean.csv` — or leave off the path; it defaults to `datasets/books_merged_clean.csv`
-- GUI: `java -cp bin BookRecommenderGUI`
-- Sort by rating: `java -cp bin SortBooksByRatingQuickSort datasets/books_merged_clean.csv datasets/out_sorted.csv`
-- Filter: `java -cp bin FilterBooks datasets/books_merged_clean.csv genre Fantasy`
+Programs — run with the **fully qualified class name** (`bookbridge.` …):
+
+- **Lookup.java** (`main`): `java -cp bin bookbridge.Lookup`
+- **BookRecommender.java** (`main`): `java -cp bin bookbridge.BookRecommender datasets/books_merged_clean.csv` — or leave off the path; it defaults to `datasets/books_merged_clean.csv`
+- **BookRecommenderGUI.java** (`main`): `java -cp bin bookbridge.BookRecommenderGUI`
+- **SortBooksByRatingQuickSort.java** (`main`): `java -cp bin bookbridge.SortBooksByRatingQuickSort datasets/books_merged_clean.csv datasets/out_sorted.csv`
+- **FilterBooks.java** (`main`): `java -cp bin bookbridge.FilterBooks datasets/books_merged_clean.csv genre Fantasy`
 
 Filter types for FilterBooks: `genre`, `author`, `language`, `publisher`, `year`.
 
@@ -71,7 +76,6 @@ Implements `BookRecommenderInterface`. Keeps data in an internal Lookup.
 - `BookRecommender()` — empty; call `loadData(String filename)` before using.
 - `BookRecommender(String filename)` — loads from file.
 - `loadData(String filename)` — reload catalog (throws UncheckedIOException on bad IO).
-- `addUserRating(String bookTitle, double rating)` — stub right now; doesn’t change scores.
 - `List<String> getRecommendations(String bookTitle)` — up to 15 other titles (genre overlap / same primary author), sorted by our score + rating. Bad title → empty list.
 - `List<String> getRecommendationsByGenre(String genre)` — up to 15 titles whose genres field contains the substring (case-insensitive), sorted by average rating.
 - `boolean containsBook(String bookTitle)` — true if exact title is in the catalog.
@@ -90,7 +94,7 @@ Examples:
 
 `main` takes input CSV path and output CSV path. Finds `average_rating` from the header, quicksorts rows descending by rating, writes new file.
 
-Example: `java -cp bin SortBooksByRatingQuickSort datasets/books_merged_clean.csv datasets/sorted.csv` creates `datasets/sorted.csv`.
+Example: `java -cp bin bookbridge.SortBooksByRatingQuickSort datasets/books_merged_clean.csv datasets/sorted.csv` creates `datasets/sorted.csv`.
 
 ### FilterBooks
 
@@ -98,18 +102,18 @@ Example: `java -cp bin SortBooksByRatingQuickSort datasets/books_merged_clean.cs
 
 Examples:
 
-- `java -cp bin FilterBooks datasets/books_merged_clean.csv author "j.k. rowling"`
-- `java -cp bin FilterBooks datasets/books_merged_clean.csv year 2005`
+- `java -cp bin bookbridge.FilterBooks datasets/books_merged_clean.csv author "j.k. rowling"`
+- `java -cp bin bookbridge.FilterBooks datasets/books_merged_clean.csv year 2005`
 
 ### BookRecommenderGUI
 
 - `BookRecommenderGUI()` — builds the tabs (search, top rated, similar books, genre).
 - `main` — starts the Swing window.
 
-Example: `java -cp bin BookRecommenderGUI` (needs a display).
+Example: `java -cp bin bookbridge.BookRecommenderGUI` (needs a display).
 
 ## Features (assignment mapping)
 
-1. Lookup: run `Lookup`, CSV path is wired in `Lookup.main`.
-2. Filter/sort: `FilterBooks` and `SortBooksByRatingQuickSort` above.
-3. Recommendations: `BookRecommender` CLI or the Similar Books / Browse by Genre tabs in the GUI.
+1. Lookup: run **`bookbridge.Lookup`** (`Lookup.java`), CSV path is wired in `main`.
+2. Filter/sort: **`bookbridge.FilterBooks`** and **`bookbridge.SortBooksByRatingQuickSort`** (`FilterBooks.java`, `SortBooksByRatingQuickSort.java`).
+3. Recommendations: **`bookbridge.BookRecommender`** (`BookRecommender.java`) or the Browse by Genre tab in the GUI (`BookRecommenderGUI.java`).

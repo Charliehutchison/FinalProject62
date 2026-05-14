@@ -1,3 +1,5 @@
+package bookbridge;
+
 import java.util.List;
 
 public interface BookRecommenderInterface {
