@@ -54,7 +54,7 @@ java FilterBooks <input.csv> <filter> <value>
 The available filtering options to choose from. (genre, author, language, publisher, year)
 
 Examples:
-java FilterBooks datasets/books_merged_clean.csv author "J.K. Rowling"
+java FilterBooks datasets/books_merged_clean.csv author "J.K. Rowling";
 java FilterBooks datasets/books_merged_clean.csv year 2005
 
 If you have not compiled, run the following CLI argument for Fantasy genre for example.
